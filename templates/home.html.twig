@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}  {# je choisi de me mettre ds le layout #}
+
+{% block body %}
+    <h1>Hello MoiJV !!!</h1>    {# mettre mots clés ds h1 ;) !! #}
+    
+    {# on a créé template, maintenant l'afficher : cf.HomeController.php lg.15 #}
+    
+    {# <=> <p><?= echo $msg; ?></p> #}
+    <p>{{ msg }}</p>    {# on app et aff var msg crée ds controller #}
+{% endblock %}
+                                                              
+{# == ex. de transfert de données vers la vue #}
+    
+    
