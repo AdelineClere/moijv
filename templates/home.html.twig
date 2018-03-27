@@ -1,12 +1,28 @@
 {% extends "base.html.twig" %}  {# je choisi de me mettre ds le layout #}
 
 {% block body %}
+    
     <h1>Hello MoiJV !!!</h1>    {# mettre mots clés ds h1 ;) !! #}
+    <h2>Liste des utilisateurs</h2>
+    <ul>
+        {# <?php foreach($users as $user) : ?> #}
+        {% for user in users %}
+            <li>{{ user.username }} {{ user.email }}</li>
+        {# <?php endforeach; ?> #}    
+        {% endfor %}
+    </ul>
+    
+    
+    
     
     {# on a créé template, maintenant l'afficher : cf.HomeController.php lg.15 #}
     
     {# <=> <p><?= echo $msg; ?></p> #}
-    <p>{{ msg }}</p>    {# on app et aff var msg crée ds controller #}
+   {# <p>{{ msg }}</p>  #}  {# on app et aff var msg crée ds controller #}
+   
+   
+   
+   
 {% endblock %}
                                                               
 {# == ex. de transfert de données vers la vue #}
