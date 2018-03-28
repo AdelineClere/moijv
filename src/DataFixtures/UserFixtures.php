@@ -16,12 +16,21 @@ class UserFixtures extends Fixture
             $user->setPassword(password_hash('user', PASSWORD_BCRYPT));
             $user->setEmail('user'.$i.'fake.fr');
             $user->setRegisterDate(new \DateTime('-'.$i.' days'));   
+            $user->setRoles('ROLE_USER');
             // Datetime = class php qui permet de gérer les dates
             // ' - $i jrs ' pr pas que nos 60, inscrits en même tps
             $manager->persist($user); 
             // $manager persist demande à doctrine de préparer l'insertion de l'entité en BDD 
             // -> INSERT INTO !
         }
+        $admin = new User();
+        $admin->setUsername('root');
+        $admin->setPassword(password_hash('admin', PASSWORD_BCRYPT));   // !! crypter mdp !!
+        $admin->setEmail('admin@mail.fr');
+        $admin->setRegisterDate(new \DateTime('now'));
+        $admin->setRoles('ROLE_USER|ROLE_ADMIN');
+        $manager->persist($admin); // tt ce qu'on vient de déclarer il l'enregistre en BDD (=persist)
+        
         $manager->flush();
         // flush() valide les req SQL et les exécute
     }

@@ -9,16 +9,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends Controller
 {
     /**
+     * @route("/",name="root")  // si après login ne trouve pas de route de redirection
+     */
+    public function root()  // on exéc cette fct
+    {
+        return $this->redirectToRoute('home');  // qui redirige vers home
+    }
+    /**
      * @Route("/home", name="home")
      */
     public function index(UserRepository $userRepo)  // à l'url home, cette fct° sera exécutée :
     {   // ns on va faire en sorte que notre appli return du HTML
-        
-        $userList = $userRepo->findAll(); 
-        // $userRepo est passé automtqt en paramètre par Sfy
-        // -> injection de dépendances. On a dc pas à l'instancier ns-même.
-        // $userRepo effectuera ici un SELECT * FROM user ...
-        
+             
         // Dc a récup list user ac findAll et on transfère à notre vue ac render :
         return $this->render("home.html.twig", ['users' => $userList]); 
         // on appelle le home.html.twig : on ajoute du contenu à Home + )

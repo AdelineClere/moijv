@@ -3,7 +3,8 @@
 {% block body %}
     
     <h1>Hello MoiJV !!!</h1>    {# mettre mots clés ds h1 ;) !! #}
-    <h2>Bienvenue sur la pg d'accueil !</h2>
+    <a href="{{ path('logout') }}">Deconnexion</a>
+    <h2>Liste des utilisateurs</h2>
     <ul>
         {# <?php foreach($users as $user) : ?> #}
         {% for user in users %}
@@ -13,7 +14,7 @@
     </ul>
     
     
-     
+    
     
     {# on a créé template, maintenant l'afficher : cf.HomeController.php lg.15 #}
     
