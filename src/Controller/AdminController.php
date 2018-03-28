@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -25,5 +27,19 @@ class AdminController extends Controller
             'users' => $userList
         ]); 
         // Dessine-moi ce template (dashboard.html.twig) ac la variable msg qui vaudra message
-    }       
+    }    
+    
+    /**
+     * @Route("/admin/user/delete/{id}", name="delete_user")
+     */
+    public function deleteUser(User $user, ObjectManager $manager)  // qd on commence à taper Obj... > longue lg > ctrl shift i
+    {
+        $manager->remove($user);
+        $manager->flush();
+        return $this->redirectToRoute('admin_dashboard');
+    }
+    
+    
+    
+    
 }

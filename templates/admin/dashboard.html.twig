@@ -1,31 +1,54 @@
-{% extends "base.html.twig" %}  {# je choisi de me mettre ds le layout #}
+{% extends "admin/layout_admin.html.twig" %}  {# je choisi de me mettre ds le layout #}
 
 {% block body %}
     
-    <h1>Hello MoiJV !!!</h1>    {# mettre mots clés ds h1 ;) !! #}
-    <a href="{{ path('logout') }}">Deconnexion</a>
-    <h2>Liste des utilisateurs</h2>
-    <ul>
-        {# <?php foreach($users as $user) : ?> #}
-        {% for user in users %}
-            <li>{{ user.username }} {{ user.email }}</li>
-        {# <?php endforeach; ?> #}    
-        {% endfor %}
-    </ul>
+    <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Data Table Example</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Nom d'utilisateur</th>
+                  <th>Email</th>
+                  <th>Date d'inscription</th>
+                  <th>Rôles</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Nom d'utilisateur</th>
+                  <th>Email</th>
+                  <th>Date d'inscription</th>
+                  <th>Rôles</th>
+                  <th>Actions</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                  {% for user in users %}   {# tablo pour parcourir pls users #}
+                <tr>
+                  <td>{{ user.username }}</td> {# {{}} = pour echo #}
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.registerDate | date('d/m/Y') }}</td>
+                  <td>{% for role in user.roles %}{{ role }} {% endfor %}</td>  {# tablo car pls roles (car implicitement on a getRoles #}
+                  {# equivaut à :  <td><a href="/admin/delete/user/4">... #}
+                  <td>
+                    <a class="btn btn-danger" href="{{ path('delete_user', { 'id' : user.id }) }}">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     
     
-    
-    
-    {# on a créé template, maintenant l'afficher : cf.HomeController.php lg.15 #}
-    
-    {# <=> <p><?= echo $msg; ?></p> #}
-   {# <p>{{ msg }}</p>  #}  {# on app et aff var msg crée ds controller #}
-   
-   
-   
-   
 {% endblock %}
                                                               
-{# == ex. de transfert de données vers la vue #}
     
     
