@@ -1,0 +1,19 @@
+{% extends "admin/layout_admin.html.twig" %}    
+{# ce template va hériter de layout_admin + on va rajouter du contenu ds section block du body / 
+le chemin en twig s'écrit différemment#}
+
+{% block body %}
+    <div class="row">
+        <div class="mx-auto col-md-6>">
+            {{ form_start(form) }}
+            {{ form_widget(form) }} {# je passe en param ac widget, mon formulaire form, prque widget l'aff. #}
+            {{ form_end(form) }}
+            <a class="btn btn-info" href="{{ path('admin_dashboard') }}">Revenir au dashboard</a>     
+            {# lien vers controler pour afficher autre vue, on doit passer par lui. TOUJOURS passer par controler ! #}
+        </div>
+    </div>
+    
+    
+    
+    
+{% endblock %}

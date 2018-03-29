@@ -4,7 +4,11 @@
     
     <div class="card mb-3">
         <div class="card-header">
-          <i class="fa fa-table"></i> Data Table Example</div>
+            <i class="fa fa-table"></i> Data Table Example 
+            <a class="btn btn-primary" href="{{ path('add_user') }}">
+            <i class="fa fa-plus"></i>Ajouter un utilisateur</a>
+        </div>                          {# btn avec route fct° edi_user #}
+                   
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -37,6 +41,9 @@
                   <td>
                     <a class="btn btn-danger" href="{{ path('delete_user', { 'id' : user.id }) }}">
                         <i class="fa fa-trash"></i>
+                    </a>  
+                    <a class="btn btn-success" href="{{ path('edit_user', { 'id' : user.id }) }}">
+                        <i class="fa fa-pencil"></i>   {# btn avec route fct° edi_user #}
                     </a>
                   </td>
                 </tr>
