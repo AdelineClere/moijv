@@ -1,4 +1,4 @@
-{% extends "admin/layout_admin.html.twig" %}  {# je choisi de me mettre ds le layout #}
+{% extends "base_layout_produits.html.twig" %}  {# je choisi de me mettre ds le layout #}
 
 
 {% block body %}
@@ -7,7 +7,7 @@
         <div class="card-header">
             <i class="fa fa-table"></i> Data Table Example 
             <a class="btn btn-primary" href="{{ path('add_user') }}">
-            <i class="fa fa-plus"></i>Ajouter un utilisateur</a>
+            <i class="fa fa-plus"></i>Ajouter un produit</a>
         </div>                          {# btn avec route fct° edi_user #}
                    
         <div class="card-body">
@@ -15,30 +15,24 @@
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
-                  <th>Nom d'utilisateur</th>
-                  <th>Email</th>
-                  <th>Date d'inscription</th>
-                  <th>Rôles</th>
-                  <th>Actions</th>
+                  <th>Nom produit</th>
+                  <th>Description</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tfoot>
                 <tr>
-                  <th>Nom d'utilisateur</th>
-                  <th>Email</th>
-                  <th>Date d'inscription</th>
-                  <th>Rôles</th>
-                  <th>Actions</th>
+                  <th>Nom produit</th>
+                  <th>Description</th>
+                  <th>Action</th>
                 </tr>
               </tfoot>
               <tbody>
-                  {% for user in users %}   {# tablo pour parcourir pls users #}
+                  {% for produit in produits %}   {# tablo pour parcourir pls users #}
                 <tr>
-                  <td>{{ user.username }}</td> {# {{}} = pour echo #}
-                  <td>{{ user.email }}</td>
-                  <td>{{ user.registerDate | date('d/m/Y') }}</td>
-                  <td>{% for role in user.roles %}{{ role }} {% endfor %}</td>  {# tablo car pls roles (car implicitement on a getRoles #}
-                  {# equivaut à :  <td><a href="/admin/delete/user/4">... #}
+                  <td>{{ produit.nomProduit }}</td> {# {{}} = pour echo #}
+                  <td>{{ produit.descripProduit }}</td>
+                  <td>{{ produit.actionProduit }}</td>
                   <td>
                     <a class="btn btn-danger" href="{{ path('delete_user', { 'id' : user.id }) }}">
                         <i class="fa fa-trash"></i>

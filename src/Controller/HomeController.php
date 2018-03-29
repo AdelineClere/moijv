@@ -20,7 +20,9 @@ class HomeController extends Controller
      */
     public function index(UserRepository $userRepo)  // à l'url home, cette fct° sera exécutée :
     {   // ns on va faire en sorte que notre appli return du HTML
-             
+        
+        $userList = $userRepo->findAll();     
+        
         // Dc a récup list user ac findAll et on transfère à notre vue ac render :
         return $this->render("home.html.twig", ['users' => $userList]); 
         // on appelle le home.html.twig : on ajoute du contenu à Home + )

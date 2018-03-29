@@ -1,4 +1,9 @@
 twig:
-    paths: ['%kernel.project_dir%/templates']
+    paths: ['%kernel.project_dir%/templates']      
+                    # activate on peut mettre views au lieu de templates ! #
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    form_themes: ['bootstrap_4_layout.html.twig']
+    
+        # on peut importer des themes Boot qui existe déjà sur Sfy
+        # https://symfony.com/blog/new-in-symfony-3-4-bootstrap-4-form-theme

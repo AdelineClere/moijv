@@ -29,7 +29,8 @@ class UserFixtures extends Fixture
         $admin->setEmail('admin@mail.fr');
         $admin->setRegisterDate(new \DateTime('now'));
         $admin->setRoles('ROLE_USER|ROLE_ADMIN');
-        $manager->persist($admin); // tt ce qu'on vient de déclarer il l'enregistre en BDD (=persist)
+        $manager->persist($admin); 
+        // tt ce qu'on vient de déclarer il l'enregistre en BDD (=persist)
         
         $manager->flush();
         // flush() valide les req SQL et les exécute
