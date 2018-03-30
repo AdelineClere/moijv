@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="row">
+        <div class="mx-auto col-md-6 my-5">
+            {{ form_start(form)}}
+            {{ form_widget(form)}}
+            {{ form_end(form)}}
+            <a class="btn btn-primary" href="{{ path ('product') }}">Revenir à mes produits</a>
+        </div>
+    </div>
+    
+{% endblock %}

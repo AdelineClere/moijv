@@ -2,13 +2,18 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+
+// peut pas y avoir 2x même email ni même username :
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity("email")   // peut pas y avoir 2x même email ni même username
+ * @UniqueEntity("email")   
  * @UniqueEntity("username")
  */
 class User implements UserInterface, \Serializable
@@ -19,7 +24,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="integer")
      */
     private $id;
-
+    
     /**
      * @ORM\Column(type="string", length=50, unique=true)
      * @Assert\Length(min=2, max=50)
@@ -49,6 +54,28 @@ class User implements UserInterface, \Serializable
      *@ORM\Column(type="string", length=100)
      */
     private $roles;
+    
+   
+    // on crée une var products qui contiendra ts les pdts de l'utilisateur
+    // var = annotation de php. > devra gén. getter & setter pour ce genre de class (Coll° products)
+    // one to many = 1 user aura pls pdts.
+    // dans Entity Product > mettre nom du champ où un propriétaire
+    /**  
+     * @ORM\OneToMany(targetEntity="Product", mappedBy="owner")
+     * @var Collection products
+     */
+    private $products;
+    
+    public function __construct() {
+       $this->products = new ArrayCollection();
+    }
+    
+    public function getProducts(): Collection 
+    {
+        return $this->products;
+    }
+
+     
     public function setRoles($roles) 
     {
         $this->roles = $roles;

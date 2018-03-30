@@ -35,6 +35,7 @@ class AdminController extends Controller
     /**
      * @Route("/admin/user/delete/{id}", name="delete_user")
      */
+    // id = param dynamiq, on récupère ce qui correspond à cet id de user dessous : id converti en user 
     public function deleteUser(User $user, ObjectManager $manager)  // qd on commence à taper Obj... > longue lg > ctrl shift i
     {                       // id d'annotation transformé en argument $user ds fct
         $manager->remove($user);

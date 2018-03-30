@@ -17,6 +17,9 @@ class UserFixtures extends Fixture
             $user->setEmail('user'.$i.'fake.fr');
             $user->setRegisterDate(new \DateTime('-'.$i.' days'));   
             $user->setRoles('ROLE_USER');
+            $this->addReference('user'.$i, $user);   // on va dire que mon user sera référencé
+            // addReference garde en ref notre $user ss un certain nom de façon 
+            // à le rendre dispo ds les autres fixtures
             // Datetime = class php qui permet de gérer les dates
             // ' - $i jrs ' pr pas que nos 60, inscrits en même tps
             $manager->persist($user); 

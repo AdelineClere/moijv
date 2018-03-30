@@ -80,6 +80,9 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
+    "pagerfanta/pagerfanta": {
+        "version": "v1.0.5"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -271,6 +274,9 @@
     },
     "twig/twig": {
         "version": "v2.4.7"
+    },
+    "white-october/pagerfanta-bundle": {
+        "version": "v1.1.2"
     },
     "zendframework/zend-code": {
         "version": "3.3.0"
