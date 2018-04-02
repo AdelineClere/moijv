@@ -31,7 +31,8 @@ class ProduitFixtures extends Fixture implements DependentFixtureInterface
         // flush() valide les req SQL et les exécute
     }
     
-    public function getDependencies(): array  // pdtFixture ne peut pas s'exécuter avant userFixture or c ce qui va se passer si on ne fait rien
+    public function getDependencies(): array  
+    // pdtFixture ne peut pas s'exécuter avant userFixture or c ce qui va se passer si on ne fait rien
     {
         return [
            UserFixtures::class 
