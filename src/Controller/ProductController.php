@@ -8,8 +8,17 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+
+// on rajoute une annot° valable pour tt notre controller = il gèrera tt ce qui commence par product
+// (on peut suppr ds annot° suiv. le /product
+/**
+ * @Route("/product")
+ */
+// Ttes ces Routes seront réservées à un utlisateur qui a le rôle user 
+// = pages pour utlisateur pour SES pdts = son espace de gestion perso
 
 class ProductController extends Controller
 {
@@ -18,36 +27,41 @@ class ProductController extends Controller
     // je récup pg en argument de ma fct :
     
     /**
-     * @Route("/product", name="product")   
-     * @Route("/product/{page}", name="product_paginated", requirements={"page"="\d+"})  
+     * @Route("/", name="product")   
+     * @Route("/{page}", name="product_paginated", requirements={"page"="\d+"})  
      */  
     public function index(ProductRepository $productRepo, $page = 1)    
     // je récup la pg. ProductRepository nous sert à faire des modèles
     {   // et cette pg on va la transmettre à findPaginated
-        $productList = $productRepo->findPaginated($page);
+        $productList = $productRepo->findPaginatedByUser($this->getUser(), $page);
         
         return $this->render('product/index.html.twig', [   // aller ds ce fichier
             'products' => $productList    // = products correspondra à $productList
         ]);
-    }
-    
+    } 
     /**
-     * @Route("/product/delete/{id}", name="delete_product")   
+     * @Route("/delete/{id}", name="delete_product")   
      */
     public function deleteProduct(Product $product, ObjectManager $manager)
     //  avt ctrl shift i : public function deleteProduct(Product $produit, \Doctrine\Common\Persistence\ObjectManager $manager)
     // (...) = j'écris la class Product pour aller chercher mon pdt OK / je donne nom à ma var : $product
     // Je vais avoir besoin de mon ObjectManag.. (m'écrit tt) OK -> je l'appelle $manager
-    {       
+    {     
+        if($product->getOwner()->getId() !== $this->getUser()->getId()){ 
+        // si proprio du pdt a id DIFFERENT à id pdt courant alors :
+        // req getOwner pas faite mais doctrine le fait automt.
+            throw $this->createAccessDeniedException('You are not allowed to delete this product');
+        }
         $manager->remove($product);
         $manager->flush();
         return $this->redirectToRoute('product');   
         // redirect attend un nom de route (mieux que chemin) / direct attend un chemin
-       
     }
+    // product/add = route pour ajouter un pdt
+    // sinon en mode edit -> insertion
     /**
-     * @Route("/product/add", name="add_product")
-     * @Route("/product/edit/{id}", name="edit_product")
+     * @Route("/add", name="add_product")   
+     * @Route("/edit/{id}", name="edit_product")
      */
     public function editProduct(Request $request, ObjectManager $manager, Product $product = null)
     {   // request = permet de faire en OO ce qu'on faisait ac superglobales en procédural
@@ -55,21 +69,50 @@ class ProductController extends Controller
         // fct sera acces via 2 routes différentes (cf. au dessus) 
         if($product === null) {  // pas de pdt > lg60, 63, 65 > 71 : j'aff form ac erreurs
             $product = new Product();   
+            $group ='insertion';
+        } else {
+            $oldImage = $product->getImage();             
+            $product->setImage(new File($product->getImage()));
+            // je transforme getImage (qui est chaine de caract) en fichier file 
+            // avant de le passer (le product) à mon formulaire dessous :
+        // je créé un formulaire de type ProductType qu'on nomme $product
+            $group ='edition';
         }
-        
-        $formProduct = $this->createForm(ProductType::class, $product)  // crée form
+    
+// !! à ce niveau ici j'ai soit un new pdt soit un qui existe en bdd
+ 
+// ici on créé un formulaire, un ProductType
+        $formProduct = $this->createForm(ProductType::class, $product, ['validation_groups'=>[$group]])  
                 ->add('Envoyer', SubmitType::class);
-        
-        $formProduct->handleRequest($request);  
-        // dit de prendre en cpte ce qui a été envoyé en post, get etc. et de valider
+ 
+// ici on dit à notre formul de gérer la requête : il va prendre pdt passé au dessus et modifié ses champs (à l'int va changer)
+        $formProduct->handleRequest($request);  // handleRequest qui fait ça
+        // dit de prendre en cpte ce qui a été envoyé en post, requête, get etc. et de valider
+        // en mode edition si on a rien modifié >>> il met null sur File (img) CAR c un fichier non prérempli !!!
+        // pour titre et descript. -> pré-rempli > dc écrase et remplace par ce qui était déjà !!
         
         if($formProduct->isSubmitted() && $formProduct->isValid()) {    
-        // si pas rentré 1er if > si form valide, je =le sauvegarde et redirige (sinon réaff. form)
-            $manager->persist($product);
-            $manager->flush();      // je nettoie
-            return $this->redirectToRoute('product');               // je redirige
-        }
-        
+        // si pas rentré 1er if > si form valide, je =le sauvegarde et redirige (sinon réaff. form)    
+            $product->setOwner($this->getUser());  //= le prorio du pdt c l'user qui est connecté
+            $image = $product->getImage();
+            if ($image === null) {   // j'ai edit, modifié txt, mais pas img => aller récup img ki est en BDD (pas celle
+                $product->setImage($oldImage);
+            } else {      
+            $newFileName = md5(uniqid()) . '.' . $image->guessExtension(); 
+            // newFN contient mon md5 (on crypt pour avoir nom uniq si pls users chargent même nom d'img) et l'extension
+            $image->move('uploads', $newFileName);  // j'organise le deplct de mon ficher ds upload par le new File..
+            // ac move (= méthode de file) : je déplace mon fichier ds doss upload en le renommant newFileName
+            // changer local° du fichier img : 1er param : la où je mets fichier / 2è param : nom qu'on lui donne
+            $product->setImage('uploads/'.$newFileName); 
+            // repasser objet en chaine 
+            // désormais en BDD ce sera son chemin et son nom sera ça
+            }
+            
+            $manager->persist($product);   // > rentrer en BDD 
+            $manager->flush();  // exécute et nettoie (efface)
+            return $this->redirectToRoute('product');   // je redirige vers la route 'Product)  
+        }   
+        // si formul pas soumis ou pas valide
         // moment à partir duquel on est rentré ds le formulaire (renseigné et renvoyé) :  
         return $this->render('product/edit_product.html.twig', [     // aff. form
             'form' => $formProduct->createView()
@@ -78,5 +121,5 @@ class ProductController extends Controller
     }
     
     
-    
 }
+// afficher que list pdt de user

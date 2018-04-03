@@ -18,7 +18,7 @@ class ProduitFixtures extends Fixture implements DependentFixtureInterface
             $product = new Product();   // ctrl shift i > a raccourci le ' \App\Entity8Product'
             $product->setTitle('Mon produit n°'. $i); // concatène ac $i pour assurer l'unicité
             $product->setDescription("Description de mon produit n°$i");
-            
+            $product->setImage("uploads/500x325.png");  
             $product->setOwner($this->getReference('user' . rand(0, 59)));
             // attribuer un pdtFixture à un user au hasard ds les 60 
             
@@ -32,6 +32,8 @@ class ProduitFixtures extends Fixture implements DependentFixtureInterface
     }
     
     public function getDependencies(): array  
+    // getDep... est une méthode de DependentFixtureInterface (+ haut)
+    // -> elle a en dépendance UserFixtures, 
     // pdtFixture ne peut pas s'exécuter avant userFixture or c ce qui va se passer si on ne fait rien
     {
         return [
