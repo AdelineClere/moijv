@@ -48,7 +48,8 @@ class AdminController extends Controller
      * @Route("/admin/user/add", name="add_user")
      * @Route("/admin/user/edit/{id}", name="edit_user")
      */
-    public function editUser(Request $request, ObjectManager $manager, User $user = null) // se produira ds 2 cas : à l'ajout ou si erreur
+    public function editUser(Request $request, ObjectManager $manager, User $user = null) 
+    // se produira ds 2 cas : à l'ajout ou si erreur
     {   // request recueille // Objest Manager permet d'entrer ou suppr en BDD
         if($user === null){             //c'est le user de Entity ici
             $user = new User();

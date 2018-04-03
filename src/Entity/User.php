@@ -25,11 +25,11 @@ class User implements UserInterface, \Serializable
      */
     private $id;
     
+    // on veut que username soit unique : on rajoute unique=true
     /**
      * @ORM\Column(type="string", length=50, unique=true)
      * @Assert\Length(min=2, max=50)
      */
-    // on veut que username soit unique : on rajoute unique=true
     private $username;
 
     /**

@@ -15,7 +15,7 @@ class ProduitFixtures extends Fixture implements DependentFixtureInterface
         // $manager->persist($product);
         
         for($i = 0; $i < 150; $i++){    // boucle pr instancier 40 pdts
-            $product = new Product();   // ctrl shift i > a raccourci le ' \App\Entity8Product'
+            $product = new Product();   // ctrl shift i > a raccourci le ' \App\Entity\Product'
             $product->setTitle('Mon produit n°'. $i); // concatène ac $i pour assurer l'unicité
             $product->setDescription("Description de mon produit n°$i");
             $product->setImage("uploads/500x325.png");  

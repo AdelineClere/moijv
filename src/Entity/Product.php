@@ -22,6 +22,7 @@ class Product
      */
     private $id;
 
+  
     // la unique=true >> pour la BDD !!
     /**
      * @ORM\Column(type="string", length=80, unique=true)
@@ -36,9 +37,9 @@ class Product
     private $description;
     
     
-    // Assert\Img = attend une img
+    // @Assert\Img = attend une img
     // @Assert\NotBlank(groups={"insertion"}) = qd on est en mode insertion il faut un fichier (pas blank)
-    // -> on veut que le notBlank ce soit que en mode insertion, pas edition !!!
+    // ( car on veut que le notBlank ce soit que en mode insertion, pas edition !!! )
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"insertion"})
@@ -56,6 +57,7 @@ class Product
      * @var User owner
      */
     private $owner;
+    
     
     // on vise entity/tag, on choisi nom qu'on donnera : products (car 1 tag aura pls pdts)
     // C une collec

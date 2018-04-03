@@ -23,8 +23,8 @@ class HomeController extends Controller
         
         $userList = $userRepo->findAll();     
         
-        // Dc a récup list user ac findAll et on transfère à notre vue ac render :
         return $this->render("home.html.twig", ['users' => $userList]); 
+        // Dc a récup list user ac findAll et on transfère à notre vue ac render :
         // on appelle le home.html.twig : on ajoute du contenu à Home + )
         // Dessine-moi ce template (home.html.twig) ac la variable msg qui vaudra message
     }       
