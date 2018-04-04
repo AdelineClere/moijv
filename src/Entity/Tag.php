@@ -35,7 +35,7 @@ class Tag
      */
     private $products;
     
-    public function __construct() { //(pr initialiser ArrayColl° = initialiser les champs de mon objet)
+    public function __construct() { //> pr initialiser ArrayColl° = initialiser les champs de mon objet)
         $this->products = new ArrayCollection();
     }
     

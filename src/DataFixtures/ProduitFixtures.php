@@ -11,8 +11,6 @@ class ProduitFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        // $product = new Product();        (code d'ex. par défaut)
-        // $manager->persist($product);
         
         for($i = 0; $i < 150; $i++){    // boucle pr instancier 40 pdts
             $product = new Product();   // ctrl shift i > a raccourci le ' \App\Entity\Product'
@@ -20,7 +18,7 @@ class ProduitFixtures extends Fixture implements DependentFixtureInterface
             $product->setDescription("Description de mon produit n°$i");
             $product->setImage("uploads/500x325.png");  
             $product->setOwner($this->getReference('user' . rand(0, 59)));
-            // attribuer un pdtFixture à un user au hasard ds les 60 
+            // attribuer un ProduitFixtures à un user au hasard ds les 60 
             
             // Associer plusieurs tags à un produit :
             for($j = 0; $j < rand(0,4); $j++) {   // tag qui vient de TagFixtures (grâce à addReference)

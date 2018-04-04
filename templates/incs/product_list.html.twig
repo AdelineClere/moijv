@@ -7,8 +7,8 @@
                 <div class="card-body">
                     <h4 class="card-title">{{ product.title }}</h4>
                     <p class="card-text">{{ product.description }}
-                    <div>
-                        {% for tag in product.tags %}
+                    <div>   
+                        {% for tag in product.tags %}   <!-- div pour app. tags des pdts ac 1 boucle -->
                             <span class="badge-info badge-pill">#{{ tag.name }}</span>
                         {% endfor %}
                     </div>
