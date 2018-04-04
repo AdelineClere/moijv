@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\UserRepository;
+use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -15,15 +15,22 @@ class HomeController extends Controller
     {
         return $this->redirectToRoute('home');  // qui redirige vers home
     }
+    
+    //1ere route, par défaut : début de pdts
+    // 2e = qd on a choisi sur quelle pg aller..
+    // Route permet d'exécuter fct index de mon Controller,
+    // ds cette fct j'ut. 1 ou pls modèles (ProductRepository) pour récup données qui seront transmises à ma vue 
     /**
      * @Route("/home", name="home")
+     * @Route("/home/{page}", name="home_paginated")
      */
-    public function index(UserRepository $userRepo)  // à l'url home, cette fct° sera exécutée :
-    {   // ns on va faire en sorte que notre appli return du HTML
-        
-        $userList = $userRepo->findAll();     
-        
-        return $this->render("home.html.twig", ['users' => $userList]); 
+    public function index(ProductRepository $productRepo, $page = 1)  
+    // à l'url home, cette fct° sera exécutée ; si on passe par home, 1ère pg sera = à 1
+    {          
+        $products = $productRepo->findPaginated($page); //je récup ma liste de pdts/pg (avec pg choisie)       
+        return $this->render("home.html.twig", [
+            'products' => $products
+        ]);
         // Dc a récup list user ac findAll et on transfère à notre vue ac render :
         // on appelle le home.html.twig : on ajoute du contenu à Home + )
         // Dessine-moi ce template (home.html.twig) ac la variable msg qui vaudra message

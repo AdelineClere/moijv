@@ -31,6 +31,7 @@ class ProductController extends Controller
      * @Route("/{page}", name="product_paginated", requirements={"page"="\d+"})  
      */  
     public function index(ProductRepository $productRepo, $page = 1)    
+    // ProductRepository est injecté en param = le C. le récup est l'utilise
     // je récup la pg. ProductRepository nous sert à faire des modèles
     {   // et cette pg on va la transmettre à findPaginated
         $productList = $productRepo->findPaginatedByUser($this->getUser(), $page);
@@ -40,8 +41,7 @@ class ProductController extends Controller
         ]);
     } 
     
-    
-    
+     
     
     /**
      * @Route("/delete/{id}", name="delete_product")   
@@ -63,8 +63,7 @@ class ProductController extends Controller
     }
     
     
-    
-    
+       
     // product/add = route pour ajouter un pdt
     // sinon en mode edit -> insertion
     /**

@@ -22,6 +22,15 @@ class ProduitFixtures extends Fixture implements DependentFixtureInterface
             $product->setOwner($this->getReference('user' . rand(0, 59)));
             // attribuer un pdtFixture à un user au hasard ds les 60 
             
+            // Associer plusieurs tags à un produit :
+            for($j = 0; $j < rand(0,4); $j++) {   // tag qui vient de TagFixtures (grâce à addReference)
+                $tag = $this->getReference ('tag' . rand(0, 39));   
+                // !! rand peut renvoyer 2 fois le même tag !! -> utiliser méthode addTag ds Product.php 
+                // à chq boucle on récup 1 entité tag pour 1 pdt ($product), 0 à 4 fois 
+                // (Rq : en POO chaq objet est une ref)
+                $product->addTag($tag);  // on utilise méthode addTag créée dans Product
+                // = ajoute tag au pdt et pdt au tag + évite doublon
+            }
             $manager->persist($product); 
             // $manager persist demande à doctrine de préparer l'insertion de l'entité en BDD 
             // -> INSERT INTO !
@@ -37,7 +46,11 @@ class ProduitFixtures extends Fixture implements DependentFixtureInterface
     // pdtFixture ne peut pas s'exécuter avant userFixture or c ce qui va se passer si on ne fait rien
     {
         return [
-           UserFixtures::class 
+            UserFixtures::class, 
+            TagFixtures::Class  
+            // qd on va faire fixtures load > vont s'exéc par ordre alphab et on essayer de récup 
+            // une réf à un user pas encore référencé 
+            // > attendre que UserFixtures et TagFixtures se soient exécutés'
         ];
     }
 }

@@ -71,7 +71,8 @@ class Product
     {
         $this->tags = new ArrayCollection();
     }
-    
+    //ArrayCollection = tablo orienté objet de doctrine 
+    //=> on doit passer par un construct qui initialise la collec°
      
     public function getOwner(): User {
         return $this->owner;
@@ -129,8 +130,18 @@ class Product
         return $this;
     }
 
+// méthode pour éviter tags en double :
+    
+    public function addTag($tag) // fct addTag qui prends en param le tag ajouté
+    {
+       if($this->tags->contains($tag)) { // vérifie si pdt n'a pas déjà le tag ($this = pdt)
+       //= si ,les tags du pdt contiennent déjà le tag rajouté > boucle continue sans l'ajouter
 
-    
-    
-    
+           return;  // si oui, on s'arrête         
+       }
+       $this->tags->add($tag);  // sinon on rajoute le tag à la liste des tags du pdt ($this = 1 pdt)
+       $tag->getProducts()->add($this); 
+       //+ faire l'inverse ! : on rajoute le produit à notre tag !
+       //-> nous prenons ce tag, on récup ses pdts et on ajoute ce pdt (=$this)
+    }
 }

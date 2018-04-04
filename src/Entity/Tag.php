@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,7 +28,18 @@ class Tag
      */
     private $slug;
     
-
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Product", mappedBy="tags")
+     * @var Collection
+     */
+    private $products;
+    
+    public function __construct() { //(pr initialiser ArrayColl° = initialiser les champs de mon objet)
+        $this->products = new ArrayCollection();
+    }
+    
+    
     public function getId()
     {
         return $this->id;
@@ -55,4 +68,15 @@ class Tag
 
         return $this;
     }
+
+    public function getProducts(): Collection {
+        return $this->products;
+    }
+
+
+    
+    
+    
+    
+    
 }

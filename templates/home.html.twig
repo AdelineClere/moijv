@@ -6,25 +6,17 @@
     <h2>Bienvenue sur la pg d'accueil !</h2>
     
 
-    
+    {% include 'incs/product_list.html.twig' with { 'products' : products } %}
+
      
     
-    
-    
-    
-    
-    
-    
-    {# on a créé template, maintenant l'afficher : cf.HomeController.php lg.15 #}
-    
-    {# <=> <p><?= echo $msg; ?></p> #}
-   {# <p>{{ msg }}</p>  #}  {# on app et aff var msg crée ds controller #}
-   
-   
-   
-   
+    <!-- PAGINATION cf goog : add style pagerfanta -->   
+    {% if products.haveToPaginate %}
+        <div class="d-flex justify-content-center"> <!-- ou d-flex justify.... -->     
+           {{ pagerfanta(products, 'twitter_bootstrap4', {'routeName' : 'home_paginated'}) }}
+        </div>
+    {% endif %}
+
 {% endblock %}
-                                                              
-{# == ex. de transfert de données vers la vue #}
-    
+                                                                  
     

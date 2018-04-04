@@ -11,33 +11,21 @@
         <a href="{{ path('add_product') }}" class="btn btn-primary btn-lg">Ajouter un produit</a>
         <!-- on appelle le pdt à ajouter par son chemin : path...  -->
     </header>
+        
+        
+        {% include 'incs/product_list.html.twig' with { 'products' : products } %}
+        <!-- ac include lui retransmettre les variables pr qu'il reconnaisse
+        'products' = liste de produit, petit nom qu'aura la variable products dans mon include,
+        products = variable transmise de mon Controller
+        (template qui transmet variable à autre template (le inc)) -->
 
-    <!-- Page Features -->
-    <div class="row text-center">
-        {% for product in products %}     <!-- Boucle pr aff. ts pdts -->   
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="{{ asset(product.image)}}" alt=""> <!-- on a viré url : http://placehold.it/500x325 -->
-            <div class="card-body">
-              <h4 class="card-title">{{ product.title }}</h4>
-              <p class="card-text">{{ product.description }}
+        
+   
+        <!-- PAGINATION cf goog : add style pagerfanta -->   
+        {% if products.haveToPaginate %}
+            <div class="d-flex justify-content-center"> <!-- ou d-flex justify.... -->     
+               {{ pagerfanta(products, 'twitter_bootstrap4', {'routeName' : 'product_paginated'}) }}
             </div>
-            <div class="card-footer">
-                <a class="btn btn-primary" href="{{ path('edit_product', {'id' : product.id}) }}">modifier</a>
-                <a class="btn btn-danger" href="{{ path('delete_product', {'id' : product.id}) }}">supprimer</a>
-            </div>
-          </div>
-        </div>    
-        {% endfor %}
-    </div>
-    <!-- /.row -->
-
-    
-     <!-- PAGINATION cf goog : add style pagerfanta -->    
-     <div class="pagination justify-content-center"> <!-- ou d-flex justify.... -->
-        {% if products.haveToPaginate %} 
-        {{ pagerfanta(products, 'twitter_bootstrap4', {'routeName' : 'product_paginated'}) }}
         {% endif %}
-     </div>
-    
+
 {% endblock %}
