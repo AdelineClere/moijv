@@ -25,6 +25,10 @@ class HomeController extends Controller
      * @Route("/home/{page}", name="home_paginated")
      */
     public function index(ProductRepository $productRepo, $page = 1)  
+    // 2 choses injectées en param : ProductRepository = c une injection de dépendances
+    // et $page qui lui est issu de l'url (injecté de l'url)
+    // !! on peut injecter que élts venues de src (et encore pas toutes)(cf. Config/services.yalm = 
+    // précisent les class que l'on peut injecter ds Controllers, autres class aussi
     // à l'url home, cette fct° sera exécutée ; si on passe par home, 1ère pg sera = à 1
     {          
         $products = $productRepo->findPaginated($page); //je récup ma liste de pdts/pg (avec pg choisie)       

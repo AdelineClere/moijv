@@ -1,24 +1,42 @@
-  <!-- Page Features -->
-    <div class="row text-center">
-        {% for product in products %}     <!-- Boucle pr aff. ts pdts -->   
+<!-- Page Features -->
+<div class="row text-center">
+    {% for product in products %}     <!-- Boucle pr aff. ts pdts -->   
         <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="{{ asset(product.image)}}" alt=""> <!-- on a viré url : http://placehold.it/500x325 -->
-            <div class="card-body">
-              <h4 class="card-title">{{ product.title }}</h4>
-              <p class="card-text">{{ product.description }}
+            <div class="card">
+                <img class="card-img-top" src="{{ asset(product.image)}}" alt=""> <!-- on a viré url : http://placehold.it/500x325 -->
+                <div class="card-body">
+                    <h4 class="card-title">{{ product.title }}</h4>
+                    <p class="card-text">{{ product.description }}
+                    <div>
+                        {% for tag in product.tags %}
+                            <span class="badge-info badge-pill">#{{ tag.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% if is_granted ('ROLE_USER') and product.owner.id == app.user.id %}    
+                    <!-- décider si oui/non afficher card pour delete/edit (' product ' vient de boucle  
+                    for au dessus) : Vérif si user existe en role user & si proprio du pdt (on récup id) 
+                    = id de user de app (appli en crs, app.user = accéder à utilisateur courant) --> 
+                    <div class="card-footer">
+                        <a class="btn btn-primary" href="{{ path('edit_product', {'id' : product.id}) }}">modifier</a>
+                        <a class="btn btn-danger" href="{{ path('delete_product', {'id' : product.id}) }}">supprimer</a>
+                    </div>
+                {% endif %}
             </div>
-            <div class="card-footer">
-                <a class="btn btn-primary" href="{{ path('edit_product', {'id' : product.id}) }}">modifier</a>
-                <a class="btn btn-danger" href="{{ path('delete_product', {'id' : product.id}) }}">supprimer</a>
-            </div>
-          </div>
         </div>    
-        {% endfor %}
+    {% endfor %}
+</div>
+
+
+<!-- PAGINATION cf goog : add style pagerfanta -->   
+{% if products.haveToPaginate %}
+    <div class="d-flex justify-content-center"> <!-- ou d-flex justify.... -->     
+        {{ pagerfanta(products, 'twitter_bootstrap4', {'routeName' : routeName }) }}
     </div>
-    
+{% endif %}
 
-    
 
-     
-     <!-- /.row -->
+
+
+<!-- /.row -->

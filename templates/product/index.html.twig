@@ -13,19 +13,11 @@
     </header>
         
         
-        {% include 'incs/product_list.html.twig' with { 'products' : products } %}
+        {% include 'incs/product_list.html.twig' with { 'products' : products, 'routeName' : 'product_paginated' } %}
         <!-- ac include lui retransmettre les variables pr qu'il reconnaisse
         'products' = liste de produit, petit nom qu'aura la variable products dans mon include,
         products = variable transmise de mon Controller
         (template qui transmet variable à autre template (le inc)) -->
 
-        
-   
-        <!-- PAGINATION cf goog : add style pagerfanta -->   
-        {% if products.haveToPaginate %}
-            <div class="d-flex justify-content-center"> <!-- ou d-flex justify.... -->     
-               {{ pagerfanta(products, 'twitter_bootstrap4', {'routeName' : 'product_paginated'}) }}
-            </div>
-        {% endif %}
 
 {% endblock %}

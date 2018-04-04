@@ -42,7 +42,8 @@ class ProductController extends Controller
     } 
     
      
-    
+    //Product = Entité => pas injectable par voie classiq = vecteur d'injection url 
+    // ObjectManager = vecteur d'injection de Sfy : par dépendances
     /**
      * @Route("/delete/{id}", name="delete_product")   
      */
@@ -127,6 +128,6 @@ class ProductController extends Controller
         
     }
     
-    
+
 }
 // afficher que list pdt de user

@@ -6,16 +6,9 @@
     <h2>Bienvenue sur la pg d'accueil !</h2>
     
 
-    {% include 'incs/product_list.html.twig' with { 'products' : products } %}
+    {% include 'incs/product_list.html.twig' with { 'products' : products, 'routeName' : 'home_paginated' } %}
 
      
-    
-    <!-- PAGINATION cf goog : add style pagerfanta -->   
-    {% if products.haveToPaginate %}
-        <div class="d-flex justify-content-center"> <!-- ou d-flex justify.... -->     
-           {{ pagerfanta(products, 'twitter_bootstrap4', {'routeName' : 'home_paginated'}) }}
-        </div>
-    {% endif %}
 
 {% endblock %}
                                                                   

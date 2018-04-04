@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Collection;
+use Doctrine\Common\Collections\Collection;
 
 // la l'unique entity c'est pour l'application (au dessous = infos pour l'appli)
 /**
