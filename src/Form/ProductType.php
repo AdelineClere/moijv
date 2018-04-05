@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductType extends AbstractType
 {
-    private $tagTransformer;
+    private $tagTransformer;    // crée cette var pour l'injecter ds construct
     
     public function __construct(TagTransformer $tagTransformer) 
     {
@@ -37,7 +37,7 @@ class ProductType extends AbstractType
                     
             ;
         
-        ;
+       // ;  ???
     }
 
     public function configureOptions(OptionsResolver $resolver)

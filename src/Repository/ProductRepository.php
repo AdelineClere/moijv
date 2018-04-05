@@ -25,9 +25,11 @@ class ProductRepository extends ServiceEntityRepository
     
     public function findPaginated($page = 1)    // le pager passé en param de la fct
     {
+            // $queryBuilder = sert à construire une req, on le stock ds 1 var car avt de devenir req 
+            // c'est 1 objet comm tt en Sfy ==> chainages de méthodes 
         $queryBuilder = $this->createQueryBuilder('p') // p vient de product récup par _construct au dessus
-                ->leftJoin('p.owner', 'u') // = p.owner_id = u.id (on cherch si user courant est proprio...
-                ->addSelect('u')    // u = owner (nimporte quel proprio, puisq on cherche commun ac user courant 
+                ->leftJoin('p.owner', 'u')      // = p.owner_id = u.id (on cherch si user courant est proprio...
+                ->addSelect('u')                // u = owner (nimporte quel proprio, puisq on cherche commun ac user courant 
                 ->leftJoin('p.tags', 't')  
                 ->addSelect ('t') 
                 ->orderBy('p.id', 'ASC'); 
@@ -48,19 +50,19 @@ class ProductRepository extends ServiceEntityRepository
     // 'User' class du namespace app/entity => ctrl shift i
     {
         $queryBuilder = $this->createQueryBuilder('p')
-            ->leftJoin('p.owner', 'u') // récup tt (cf cahier, jointures...)
+            ->leftJoin('p.owner', 'u') // récup tt (cf schémas jointures...)
                 // je cherche à joindre le proprio du pdt = leftJoin = tu prends que qd corresp user-pdt 
-                // si ds entity pdt j'ai un owner, c'est bien le proprio et je donne allias u et u doit ê = à user
+                // si ds entity pdt j'ai un owner, c'est bien le proprio et je donne alias u et u doit ê = à user
                 // leftJoin prend 2 param : p.owner et u (u fait ref à p.owner), si pas de user corresp tu prends qd même le pdt / 
                 // rightJoin = si pas de pdt tu prends qd même user               
-            ->addSelect('u') // = comm si je rajoutais SELECT * / sél TOUTES les données des users
-            //(en coulisse par doctrine <=> SELECT p.*, u.* FROM product INNER JOIN user ON p.user_id = u.id
+            ->addSelect('u')    // = comm si je rajoutais SELECT * / sél TOUTES les données des users
+                //(en coulisse par doctrine <=> SELECT p.*, u.* FROM product INNER JOIN user ON p.user_id = u.id
             
-            ->leftJoin('p.tags', 't')  // jointure entre tags et tags des pdts tagués qui doivent communs
-            ->addSelect ('t')           // rajouter à ma requete mes tags
-            // ici on affiche corresp ac user commun
-            ->where('u = :user') //sur 1 objet ici : $user / (on met marqueur ou ? = marqueur qui a pas de nom)
-            ->setParameter('user', $user)   //= bindParam / En sql : user_id = 7 (cf. Queries ds profiler de Sfy
+            ->leftJoin('p.tags', 't')       // jointure entre tags et tags des pdts tagués qui doivent ê communs
+            ->addSelect ('t')               // rajouter à ma requete mes tags
+                                            // ici on affiche corresp ac user commun
+            ->where('u = :user')            //sur 1 objet ici : $user / (on met marqueur ou ? = marqueur qui a pas de nom)
+            ->setParameter('user', $user)   //= bindParam / En sql : user_id = 7 (cf. Queries ds profiler de Sfy)
             ->orderBy('p.id', 'ASC'); 
     
         $pager = new DoctrineORMAdapter($queryBuilder);      
@@ -69,7 +71,7 @@ class ProductRepository extends ServiceEntityRepository
     }
     
     
-    // +- Faire un getProduct des pdts corresp au tag
+        // +- Faire un getProduct des pdts corresp au tag
     public function findPaginatedByTag (Tag $tag, $page = 1) 
     {
         $queryBuilder = $this->createQueryBuilder('p')
@@ -87,14 +89,14 @@ class ProductRepository extends ServiceEntityRepository
         return $fanta->setMaxPerPage(12)->setCurrentPage($page);       
     }
     
-        // 2 leftJoin car (on emprunte 2 fois la table.. ?:
-        // 1er > on veut afficher les pdts associés au tag MAIS AUSSI les tags de ces pdts
-        // 2e  > faire le filtre : je filtre sur t2 
-            // leftJoin user u
-            // leftJoin tag t
-            // leftJoin tag t2
-            // WHERE t2.id = 7
-   
+            // 2 leftJoin car (on emprunte 2 fois la table.. ?:
+            // 1er > on veut afficher les pdts associés au tag MAIS AUSSI les tags de ces pdts
+            // 2e  > faire le filtre : je filtre sur t2 
+                // leftJoin user u
+                // leftJoin tag t
+                // leftJoin tag t2
+                // WHERE t2.id = 7
+
     
     
 }

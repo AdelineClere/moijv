@@ -50,25 +50,23 @@ class AdminController extends Controller
      */
     public function editUser(Request $request, ObjectManager $manager, User $user = null) 
     // se produira ds 2 cas : à l'ajout ou si erreur
-    {   // request recueille // Objest Manager permet d'entrer ou suppr en BDD
+    {   // request recueille // Object Manager permet d'entrer ou suppr en BDD
         if($user === null){             //c'est le user de Entity ici
             $user = new User();
         }
         $formUser = $this->createForm(UserType::class, $user)  //on précise le type puis les données
             ->add('Envoyer', SubmitType::class);
-        // ...todo : validation
         
         $formUser->handleRequest($request); // déclenche la gestion du formulaire
         
-        if($formUser->isSubmitted() && $formUser->isValid()) {  // si le btn envoyé cliqué
-            // enregistrement de notre user
-            $user->setRegisterDate(new \DateTime('now')); // date d'enregistrt
-            $user->setRoles('ROLE_USER');                // rôle (admin ou pas)
-            $manager->persist($user);                    // insert ds BDD
-            $manager->flush();                           // remettre à 0
+        if($formUser->isSubmitted() && $formUser->isValid()) {  
+            // si le btn 'envoyé' cliqué et ... => enregistrement de notre user
+            $user->setRegisterDate(new \DateTime('now'));   // date d'enregistrt
+            $user->setRoles('ROLE_USER');                   // rôle (admin ou pas)
+            $manager->persist($user);                       // insert ds BDD
+            $manager->flush();                              // remettre à 0
             
-            return $this->redirectToRoute('admin_dashboard');
-            // on redirige vers l'admin dashboard
+            return $this->redirectToRoute('admin_dashboard');   // on redirige vers l'admin dashboard
         }
         
         return $this->render('admin/edit_user.html.twig',[

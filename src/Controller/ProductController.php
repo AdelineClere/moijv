@@ -14,36 +14,38 @@ use Symfony\Component\Routing\Annotation\Route;
 
 
 
-// on rajoute une annot° valable pour tt notre controller = il gèrera tt ce qui commence par product
-// (on peut suppr ds annot° suivantes le ' product '
+    // on rajoute une annot° valable pour tt notre controller = il gèrera tt ce qui commence par product
+    // (on peut suppr ds annot° suivantes le ' product '
+    // Ttes ces Routes seront réservées à un utlisateur qui a le rôle user 
+    // = page pour utlisateur pour SES pdts = son espace de gestion perso
 /**
  * @Route("/product")
  */
-// Ttes ces Routes seront réservées à un utlisateur qui a le rôle user 
-// = page pour utlisateur pour SES pdts = son espace de gestion perso
 class ProductController extends Controller
 {
-    // on a créé cette route (1ere lg) qui transmet cette pg :
-    // {page} = param dynamiq, on récupère ce qui correspond à ça dessous : 
-    // je récup pg en argument de ma fct :  
+        // on a créé cette route (1ere lg) qui transmet cette pg :
+        // {page} = param dynamiq, on récupère ce qui correspond à ça dessous : 
+        // je récup pg en argument de ma fct :  
     /**
      * @Route("/", name="product")   
      * @Route("/{page}", name="product_paginated", requirements={"page"="\d+"})  
      */  
     public function index(ProductRepository $productRepo, $page = 1)    
-    // ProductRepository est injecté en param = le C. le récup est l'utilise
-    // je récup la pg. ProductRepository nous sert à faire des modèles
-    {   // et cette pg on va la transmettre à findPaginated
+        // ProductRepository est injecté en param = le C. le récup & l'utilise pr faire des modèles
+        // je récup la pg. on va la transmettre à findPaginated
+    { 
         $productList = $productRepo->findPaginatedByUser($this->getUser(), $page);
         
-        return $this->render('product/index.html.twig', [   // aller ds ce fichier
+        return $this->render('product/index.html.twig', [   // envoyer à cette vue
             'products' => $productList    // = products correspondra à $productList
         ]);
     } 
     
+    
+    
      
-    //Product = Entité => pas injectable par voie classiq = vecteur d'injection url 
-    // ObjectManager = vecteur d'injection de Sfy : par dépendances
+        // Product = Entité => pas injectable par voie classiq = vecteur d'injection url 
+        // ObjectManager = vecteur d'injection de Sfy : par dépendances
     /**
      * @Route("/delete/{id}", name="delete_product")   
      */
@@ -53,7 +55,7 @@ class ProductController extends Controller
     // Je vais avoir besoin de mon ObjectManag.. (m'écrit tt) OK -> je l'appelle $manager
     {     
         if($product->getOwner()->getId() !== $this->getUser()->getId()){ 
-        // si proprio du pdt a id DIFFERENT à id pdt courant alors :
+        // si proprio du pdt a id ≠ de id user courant alors :
         // req getOwner pas faite mais doctrine le fait automt.
             throw $this->createAccessDeniedException('You are not allowed to delete this product');
         }
@@ -64,9 +66,11 @@ class ProductController extends Controller
     }
     
     
-       
-    // product/add = route pour ajouter un pdt
-    // sinon en mode edit -> insertion
+      
+    
+    
+        // product/add = route pour ajouter un pdt
+        // sinon en mode edit -> insertion
     /**
      * @Route("/add", name="add_product")   
      * @Route("/edit/{id}", name="edit_product")
@@ -106,7 +110,7 @@ class ProductController extends Controller
                 $product->setImage($oldImage);
             } else {      
             $newFileName = md5(uniqid()) . '.' . $image->guessExtension(); 
-            // newFN contient mon md5 (nom crypté pour avoir nom uniq si pls users chargent img de même nom img) +et+ l'extension
+            // newFN contient mon md5 (nom crypté pour avoir nom uniq si pls users chargent img de même nom img) + l'extension
             $image->move('uploads', $newFileName); 
             // ac move (= méthode de File) : je déplace mon fichier ds doss upload en le renommant newFileName
             // = change local° du fichier img : 1er param = la où je mets fichier / 2è param = nom qu'on lui donne

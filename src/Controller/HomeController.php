@@ -27,6 +27,7 @@ class HomeController extends Controller
      */
     public function index(ProductRepository $productRepo, $page = 1)  
             // 2 choses injectées en param : ProductRepository = c une injection de dépendances
+            // (ds ma fct Index tu peux m'injecter ça et l'appeler $userRepo)
             // et var $page issue, elle, de l'url (injecté de l'url)
             // !! on peut injecter que élts venus de src (et encore pas tous) (cf. Config/services.yalm) : 
             // -> précisent les class que l'on peut injecter ds Controllers, poss inject autres class aussi
