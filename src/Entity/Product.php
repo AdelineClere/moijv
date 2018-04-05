@@ -60,9 +60,11 @@ class Product
     
     
     // on vise entity/tag, on choisi nom qu'on donnera : products (car 1 tag aura pls pdts)
-    // C une collec
+    // C une collec / cascade = si mon pdt est sauvegardé, les tags associés le seront aussi 
+    // (doctrine se plaint car ont été associées en php mais on les a pas persistés 
+    // (si l y a des nvlles entités tu les persistent !!
     /**
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="products")
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="products", cascade="persist")
      * @var Collection
      */
     private $tags;

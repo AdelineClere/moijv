@@ -16,6 +16,8 @@
 
     <!-- Custom styles for this template -->
     <link href="{{ asset("css/heroic-features.css") }}" rel="stylesheet">
+    
+    {% block stylesheets %}{% endblock %}
 
   </head>
 
@@ -87,7 +89,9 @@
     <!-- Bootstrap core JavaScript -->
     <script src="{{ asset("vendor/jquery/jquery.min.js") }}"></script>
     <script src="{{ asset("vendor/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
-
+    
+    {% block javascripts %}{% endblock %}
+    
   </body>
 
 </html>

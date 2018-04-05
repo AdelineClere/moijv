@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des produits du tag {{ tag.name }} {% endblock %} 
+{# {{ tag.name }} > on récup directt le nom pas le slug ds l'url #}
+
+{% block body %}
+    <h1>{{ block('title') }}</h1> {# reprend titre du block dessus ! #}
+    
+    {% include 'incs/product_list.html.twig' with {'products' : products, 'routeName' : 'tag_paginated'} %}
+     {# include le gabarit pour aff. liste de pdts + la Route paginated (cf. TagController #}
+    
+{% endblock %}

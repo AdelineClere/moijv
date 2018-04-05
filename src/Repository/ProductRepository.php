@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\Tag;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -25,9 +26,9 @@ class ProductRepository extends ServiceEntityRepository
     public function findPaginated($page = 1)    // le pager passé en param de la fct
     {
         $queryBuilder = $this->createQueryBuilder('p') // p vient de product récup par _construct au dessus
-                ->innerJoin('p.owner', 'u') 
-                ->addSelect('u')
-                ->innerJoin('p.tags', 't')
+                ->leftJoin('p.owner', 'u') // = p.owner_id = u.id (on cherch si user courant est proprio...
+                ->addSelect('u')    // u = owner (nimporte quel proprio, puisq on cherche commun ac user courant 
+                ->leftJoin('p.tags', 't')  
                 ->addSelect ('t') 
                 ->orderBy('p.id', 'ASC'); 
             // On créé le queryBuilder (rappel alias en req. sql (table membre m ...)
@@ -43,60 +44,57 @@ class ProductRepository extends ServiceEntityRepository
     
         // fct qui prend en param un $user de la class user et en 2è param une page
         // pour afficher que les pdts de l'user
-    public function findPaginatedByUser (User $user, $page = 1) // 'User' class du namespace app/entity => ctrl shift i
+    public function findPaginatedByUser (User $user, $page = 1) // pg qui récup pdts d'1 utlisateur
+    // 'User' class du namespace app/entity => ctrl shift i
     {
         $queryBuilder = $this->createQueryBuilder('p')
-            ->innerJoin('p.owner', 'u') 
-                // je cherche à joindre le proprio du pdt = innerJoin = tu prends que qd corresp user-pdt 
+            ->leftJoin('p.owner', 'u') // récup tt (cf cahier, jointures...)
+                // je cherche à joindre le proprio du pdt = leftJoin = tu prends que qd corresp user-pdt 
                 // si ds entity pdt j'ai un owner, c'est bien le proprio et je donne allias u et u doit ê = à user
                 // leftJoin prend 2 param : p.owner et u (u fait ref à p.owner), si pas de user corresp tu prends qd même le pdt / 
                 // rightJoin = si pas de pdt tu prends qd même user               
-            ->addSelect('u') // = comm si je rajoutais SELECT * 
-            //(en coulisse par doctrine <=> SELECT p.*, u*   FROM product INNER JOIN user ON p.user_id = u.id
+            ->addSelect('u') // = comm si je rajoutais SELECT * / sél TOUTES les données des users
+            //(en coulisse par doctrine <=> SELECT p.*, u.* FROM product INNER JOIN user ON p.user_id = u.id
             
-            ->innerJoin('p.tags', 't')  // jointure entre tags et tags des pdts tagués qui doivent communs
+            ->leftJoin('p.tags', 't')  // jointure entre tags et tags des pdts tagués qui doivent communs
             ->addSelect ('t')           // rajouter à ma requete mes tags
-            
-            ->where('u = :user')        // on met un marqueur, (ou ? = marqueur qui a pas de nom)
-            ->setParameter('user', $user)   // = bindParam
+            // ici on affiche corresp ac user commun
+            ->where('u = :user') //sur 1 objet ici : $user / (on met marqueur ou ? = marqueur qui a pas de nom)
+            ->setParameter('user', $user)   //= bindParam / En sql : user_id = 7 (cf. Queries ds profiler de Sfy
             ->orderBy('p.id', 'ASC'); 
-
-        
+    
         $pager = new DoctrineORMAdapter($queryBuilder);      
         $fanta = new Pagerfanta($pager);    
-        return $fanta->setMaxPerPage(12)->setCurrentPage($page);  
-        
-        
-        
+        return $fanta->setMaxPerPage(12)->setCurrentPage($page);       
     }
     
-     
-//    /**
-//     * @return Product[] Returns an array of Product objects
-//     */
-    /*
-    public function findByExampleField($value)
+    
+    // +- Faire un getProduct des pdts corresp au tag
+    public function findPaginatedByTag (Tag $tag, $page = 1) 
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->leftJoin('p.owner', 'u')
+            ->addSelect('u')
+            ->leftJoin('p.tags', 't')  
+            ->leftJoin('p.tags', 't2')  
+            ->addSelect ('t')          
+            ->where('t2 = :tag') 
+            ->setParameter('tag', $tag)   
+            ->orderBy('p.id', 'ASC'); 
+    
+        $pager = new DoctrineORMAdapter($queryBuilder);      
+        $fanta = new Pagerfanta($pager);    
+        return $fanta->setMaxPerPage(12)->setCurrentPage($page);       
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Product
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+    
+        // 2 leftJoin car (on emprunte 2 fois la table.. ?:
+        // 1er > on veut afficher les pdts associés au tag MAIS AUSSI les tags de ces pdts
+        // 2e  > faire le filtre : je filtre sur t2 
+            // leftJoin user u
+            // leftJoin tag t
+            // leftJoin tag t2
+            // WHERE t2.id = 7
+   
+    
+    
 }

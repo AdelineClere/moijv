@@ -9,7 +9,7 @@
                     <p class="card-text">{{ product.description }}
                     <div>   
                         {% for tag in product.tags %}   <!-- div pour app. tags des pdts ac 1 boucle -->
-                            <span class="badge-info badge-pill">#{{ tag.name }}</span>
+                            <a href="{{ path('tag',{'slug' : tag.slug}) }}" class="badge-info badge-pill">#{{ tag.name }}</a>
                         {% endfor %}
                     </div>
                 </div>
