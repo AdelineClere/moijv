@@ -32,6 +32,7 @@ class TagRepository extends ServiceEntityRepository
     public function getCorrespondingTag($tagName) 
         // on va récup le slug pas le nom -> une librairie pour 'slugifier'
     {
+        $tagName = trim($tagName);// fct native de php qui suppr esp avt/ap
         $slugify = new Slugify();
         $tagSlug = $slugify->slugify($tagName);         // Slugify = objet qui transforme nom en slug ac méthode slugify 
         $tag = $this->findOneBy(['slug' => $tagSlug]);  // je récup un tag ou pas, et le créé sinon
@@ -47,6 +48,14 @@ class TagRepository extends ServiceEntityRepository
         return $tag;
     }
     
+    public function searchBySlug($slug) // permet de faire une recherche par slug
+    {
+        return $this->createQueryBuilder('t') //
+            ->where('t.slug LIKE :slug')   
+                // en sql on veut obtenir : SELECT t.* FROM tag as t WHERE slug LIKE "%play%" (% : peut importe ce qu'il y a avt/apr
+            ->setParameter('slug', "%$slug%")
+            ->getQuery()->getResult(); //d'hab pas fait, car pagerFanta le faisait automqt   
+    }
     
     
     

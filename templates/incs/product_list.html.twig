@@ -19,9 +19,15 @@
                     for au dessus) : Vérif si user existe en role user & si proprio du pdt (on récup id) 
                     = id de user de app (appli en crs, app.user = accéder à utilisateur courant) --> 
                     <div class="card-footer">
-                        <a class="btn btn-primary" href="{{ path('edit_product', {'id' : product.id}) }}">modifier</a>
-                        <a class="btn btn-danger" href="{{ path('delete_product', {'id' : product.id}) }}">supprimer</a>
+                        <a class="btn btn-primary" href="{{ path('edit_product', {'id' : product.id}) }}">Modifier</a>
+                        <a class="btn btn-danger" href="{{ path('delete_product', {'id' : product.id}) }}">Supprimer</a>
                     </div>
+                    
+                    {% elseif is_granted('ROLE_USER') %}  <!-- si user est inscrit.. -->
+                        <div class="card-footer">
+                            <a class="btn btn-success" href="{{ path('add_loan', {'id' : product.id } )}}">Emprunter</a>
+                        </div>
+                     
                 {% endif %}
             </div>
         </div>    

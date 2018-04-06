@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block stylesheets %}
-    <link href="{{ asset('css/selectize.css') }}" rel=stylesheet"/>
+    <link href="{{ asset('css/selectize.css') }}" rel="stylesheet"/>
 {% endblock %}
 
 {% block body %}
@@ -13,9 +13,50 @@
             <a class="btn btn-primary" href="{{ path ('product') }}">Revenir à mes produits</a>
         </div>
     </div>
-    
+
 {% endblock %}
 
 {% block javascripts %}
-     <script src="{{ asset('js/selectize.js') }}"></script>
+    <script src="{{ asset('js/selectize.js') }}"></script>
+
+    <script>    // pour recherche tags
+        $(function () {
+
+            $('#product_tags').selectize({
+                delimiter: ',',     
+                valueField: 'name',
+                labelField: 'name',
+                searchField: 'slug',
+                create: true,
+                persist: true,
+                render: {
+                    option: function (item, escape) {
+                        return '<div>' +
+                                '<span class="name">' + escape(item.name) + '</span>' +
+                                '</div>';
+                    }
+                },
+                load: function (query, callback) {  
+                // fct load appelée à chaq fois qu'on tape qqch et elle qui fait rech de type get en ajax qui répondra du json, prendra en param ce qu'on a tapé dans le champ
+                    if (!query.length)
+                        return callback();
+                    $.ajax({
+                        url: "{{ path('search_tag') }}",
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            search: query
+                        },
+                        error: function () {    // si req echoue app. méthode callback   
+                            callback();
+                        },
+                        success: function (res) {
+                            callback(res);
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>
 {% endblock %}

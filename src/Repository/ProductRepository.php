@@ -32,7 +32,14 @@ class ProductRepository extends ServiceEntityRepository
                 ->addSelect('u')                // u = owner (nimporte quel proprio, puisq on cherche commun ac user courant 
                 ->leftJoin('p.tags', 't')  
                 ->addSelect ('t') 
-                ->orderBy('p.id', 'ASC'); 
+                ->leftJoin('p.loans', 'l')              // pr n'appeler que les pdts dispos
+                ->where('l.status = :status1')
+                ->orWhere('l.status = :status2')
+                ->orWhere('l.status is NULL')
+                ->setParameter('status1', 'finished')    
+                ->setParameter('status2', 'refused')
+                ->orderBy('p.id', 'DESC');              // DESC => envie ptetre de voir pdts + récents...
+                
             // On créé le queryBuilder (rappel alias en req. sql (table membre m ...)
         $pager = new DoctrineORMAdapter($queryBuilder);      
             // obligé de passer par un objet Adapteur pr faire lien entre le queryBuilder de doctrine 
@@ -63,7 +70,7 @@ class ProductRepository extends ServiceEntityRepository
                                             // ici on affiche corresp ac user commun
             ->where('u = :user')            //sur 1 objet ici : $user / (on met marqueur ou ? = marqueur qui a pas de nom)
             ->setParameter('user', $user)   //= bindParam / En sql : user_id = 7 (cf. Queries ds profiler de Sfy)
-            ->orderBy('p.id', 'ASC'); 
+            ->orderBy('p.id', 'ASC');      
     
         $pager = new DoctrineORMAdapter($queryBuilder);      
         $fanta = new Pagerfanta($pager);    
@@ -81,9 +88,19 @@ class ProductRepository extends ServiceEntityRepository
             ->leftJoin('p.tags', 't2')  
             ->addSelect ('t')          
             ->where('t2 = :tag') 
-            ->setParameter('tag', $tag)   
-            ->orderBy('p.id', 'ASC'); 
-    
+            ->leftJoin('p.loans', 'l')  // pr n'appeler que les pdts dispos 
+            ->setParameter('tag', $tag) // tag_id = 7
+            ->orderBy('p.id', 'DESC'); 
+        
+        $orGroup = $queryBuilder->expr()->orX();   // Besoin de ça dès qu'on aura besoin de gérer des ()
+        $orGroup->add($queryBuilder->expr()->eq('l.status', ':status1'));
+        $orGroup->add($queryBuilder->expr()->eq('l.status', ':status2'));
+        $orGroup->add($queryBuilder->expr()->isNull('l.status'));
+      
+        $queryBuilder->andWhere($orGroup)
+            ->setParameter('status1', 'refused')
+            ->setParameter('status2', 'finished');
+   
         $pager = new DoctrineORMAdapter($queryBuilder);      
         $fanta = new Pagerfanta($pager);    
         return $fanta->setMaxPerPage(12)->setCurrentPage($page);       

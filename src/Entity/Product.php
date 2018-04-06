@@ -37,9 +37,9 @@ class Product
     private $description;
     
     
-    // @Assert\Img = attend une img
-    // @Assert\NotBlank(groups={"insertion"}) = qd on est en mode insertion il faut un fichier (pas blank)
-    // ( car on veut que le notBlank ce soit que en mode insertion, pas edition !!! )
+        // @Assert\Img = attend une img
+        // @Assert\NotBlank(groups={"insertion"}) = qd on est en mode insertion il faut un fichier (pas blank)
+        // ( car on veut que le notBlank ce soit que en mode insertion, pas edition !!! )
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(groups={"insertion"})
@@ -69,9 +69,18 @@ class Product
      */
     private $tags;
     
+        // pas OneToOne, car on garde trace emprunts
+        // var Collection (pas loan car pls ! > dc l'instancier ds Cr
+    /**
+     * @ORM\OneToMany(targetEntity="Loan", mappedBy="product")
+     * @var Collection
+     */
+    private $loans;
+    
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->loans = new ArrayCollection();
     }
     // ArrayCollection = tablo orienté objet de doctrine 
     //=> on doit passer par un construct qui initialise la collec°
@@ -144,4 +153,28 @@ class Product
        $tag->getProducts()->add($this);     //+ faire l'inverse ! : on rajoute le produit à notre tag !
                                             //-> nous prenons ce tag, on récup ses pdts et on ajoute ce pdt (=$this)
     }
+
+    public function getLoans(): Collection
+    {
+        return $this->loans;
+    }
+
+    public function setLoans(Collection $loans) 
+    {
+        $this->loans = $loans;
+        return $this;
+    }
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
