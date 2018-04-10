@@ -11,52 +11,56 @@
         </div>                          {# btn avec route fct° edi_user #}
                    
         <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-              <thead>
-                <tr>
-                  <th>Nom d'utilisateur</th>
-                  <th>Email</th>
-                  <th>Date d'inscription</th>
-                  <th>Rôles</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tfoot>
-                <tr>
-                  <th>Nom d'utilisateur</th>
-                  <th>Email</th>
-                  <th>Date d'inscription</th>
-                  <th>Rôles</th>
-                  <th>Actions</th>
-                </tr>
-              </tfoot>
-              <tbody>
-                  {% for user in users %}   {# tablo pour parcourir pls users #}
-                <tr>
-                  <td>{{ user.username }}</td> {# {{}} = pour echo #}
-                  <td>{{ user.email }}</td>
-                  <td>{{ user.registerDate | date('d/m/Y') }}</td>
-                  <td>{% for role in user.roles %}{{ role }} {% endfor %}</td>  {# tablo car pls roles (car implicitement on a getRoles #}
-                  {# equivaut à :  <td><a href="/admin/delete/user/4">... #}
-                  <td>
-                    <a class="btn btn-danger" href="{{ path('delete_user', { 'id' : user.id }) }}">
-                        <i class="fa fa-trash"></i>
-                    </a>  
-                    <a class="btn btn-success" href="{{ path('edit_user', { 'id' : user.id }) }}">
-                        <i class="fa fa-pencil"></i>   {# btn avec route fct° edi_user #}
-                    </a>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
+            <div class="table-responsive">
+                
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+                    <thead>
+                        <tr>
+                            <th>Nom d'utilisateur</th>
+                            <th>Email</th>
+                            <th>Date d'inscription</th>
+                            <th>Rôles</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tfoot>
+                        <tr>
+                            <th>Nom d'utilisateur</th>
+                            <th>Email</th>
+                            <th>Date d'inscription</th>
+              ·              <th>Rôles</th>
+                            <th>Actions</th>
+                        </tr>
+                    </tfoot>
+
+                    <tbody>
+                        {% for user in users %}   {# tablo pour parcourir pls users #}
+                        <tr>
+                            <td>{{ user.username }}</td> {# {{}} = pour echo #}
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.registerDate | date('d/m/Y') }}</td>
+                            <td>{% for role in user.roles %}{{ role }} {% endfor %}</td>  {# tablo car pls roles (car implicitement on a getRoles #}
+                            {# equivaut à :  <td><a href="/admin/delete/user/4">... #}
+                            <td>
+                              <a class="btn btn-danger" href="{{ path('delete_user', { 'id' : user.id }) }}">
+                                  <i class="fa fa-trash"></i>
+                              </a>  
+                              <a class="btn btn-success" href="{{ path('edit_user', { 'id' : user.id }) }}">
+                                  <i class="fa fa-pencil"></i>   {# btn avec route fct° edi_user #}
+                              </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    
+                </table>
+                    
+            </div>
         </div>
+        
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-    
-    
-{% endblock %}
-                                                              
-    
-    
+    </div>   
+                        
+{% endblock %}  

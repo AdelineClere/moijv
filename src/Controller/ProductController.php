@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-
     // on rajoute une annot° valable pour tt notre controller = il gèrera tt ce qui commence par product
     // (on peut suppr ds annot° suivantes le ' product '
     // Ttes ces Routes seront réservées à un utlisateur qui a le rôle user 
@@ -106,7 +105,7 @@ class ProductController extends Controller
         // si pas rentré 1er if > si form valide, je le sauvegarde et redirige (sinon réaff. form)    
             $product->setOwner($this->getUser());  //= le prorio du pdt c l'user qui est connecté
             $image = $product->getImage();
-            if ($image === null) {   // j'ai edit, modifié txt, mais pas img => aller récup img ki est en BDD 
+            if ($image === null) {   // j'ai edit, modifié txt, mais pas img => aller récup img ki est en DB 
                 $product->setImage($oldImage);
             } else {      
             $newFileName = md5(uniqid()) . '.' . $image->guessExtension(); 
@@ -116,7 +115,7 @@ class ProductController extends Controller
             // = change local° du fichier img : 1er param = la où je mets fichier / 2è param = nom qu'on lui donne
             $product->setImage('uploads/'.$newFileName); 
             // repasser objet en chaine 
-            // désormais en BDD ce sera son chemin et son nom sera ça
+            // désormais en DB ce sera son chemin et son nom sera ça
             }
             
             $manager->persist($product);    // rentre en BDD 
